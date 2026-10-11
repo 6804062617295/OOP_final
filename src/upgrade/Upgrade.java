@@ -2,9 +2,7 @@ package upgrade;
 
 import game.Restaurant;
 
-/**
- * Base class for purchasable upgrades between game days.
- */
+// Base class for shop upgrades
 public abstract class Upgrade {
     public static final int MAX_LEVEL = 3;
 
@@ -19,10 +17,10 @@ public abstract class Upgrade {
         this.baseCost = baseCost;
     }
 
-    /** What this upgrade actually does to the restaurant. */
+    // Applies upgrade effect to restaurant
     protected abstract void apply(Restaurant restaurant);
 
-    /** Each level costs more than the last one. */
+    // Each level costs more than the last
     public int getCost() {
         return baseCost * (level + 1);
     }
@@ -31,7 +29,7 @@ public abstract class Upgrade {
         return level >= MAX_LEVEL;
     }
 
-    /** @return true if the upgrade was bought */
+    // Returns true if upgrade was bought
     public boolean buy(Restaurant restaurant) {
         if (isMaxed() || !restaurant.spend(getCost())) {
             return false;

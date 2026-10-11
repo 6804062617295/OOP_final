@@ -4,7 +4,7 @@ import item.Recipe;
 
 import java.awt.*;
 
-/** A rich customer: very impatient, but pays DOUBLE. */
+// VIP customer: low patience, pays 2x
 public class VipCustomer extends Customer {
 
     public VipCustomer(double patienceMultiplier) {

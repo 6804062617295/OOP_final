@@ -7,22 +7,17 @@ import upgrade.Upgrade;
 import java.awt.*;
 import java.util.List;
 
-/**
- * Modernized Shop screen presenting kitchen upgrades, shift earnings statistics,
- * and next-day progression with cohesive visual styling.
- */
+// Shop screen for upgrades and daily earnings
 public final class ShopView {
 
     private ShopView() {
     }
 
     public static void draw(Graphics2D g, int width, int height, Restaurant restaurant, String shopMessage) {
-        // Dark backdrop with glow
         UiKit.drawBackdropWithGlow(g, width, height);
 
         int centerX = width / 2;
 
-        // 1. Header Title
         g.setFont(new Font("SansSerif", Font.BOLD, 12));
         g.setColor(UiKit.TEXT_AMBER);
         Assets.drawCenteredText(g, "★ SHIFT COMPLETED ★", centerX, 38);
@@ -35,7 +30,7 @@ public final class ShopView {
         g.setColor(UiKit.TEXT_CREAM);
         Assets.drawCenteredText(g, "DAY " + restaurant.getDay() + " SUMMARY & SHOP", centerX, 76);
 
-        // 2. Performance Stats Card
+        // Stats summary
         int statsW = 845;
         int statsH = 75;
         int statsX = (width - statsW) / 2;
@@ -56,7 +51,7 @@ public final class ShopView {
         drawStatColumn(g, statsX + colW * 3, statsY, colW, "TOTAL BANK",
                 "$" + restaurant.getMoney(), UiKit.TEXT_GOLD);
 
-        // 3. Upgrades List
+        // Upgrades
         List<Upgrade> upgrades = restaurant.getUpgrades();
         int upgradeY = 195;
         int cardH = 80;
@@ -68,7 +63,6 @@ public final class ShopView {
             drawUpgradeCard(g, statsX, y, statsW, cardH, i + 1, u, restaurant.getMoney());
         }
 
-        // 4. Status Message Feedback
         int footerY = upgradeY + upgrades.size() * (cardH + cardGap) + 12;
         if (shopMessage != null && !shopMessage.isBlank()) {
             g.setFont(UiKit.FONT_SUBTITLE);
@@ -76,7 +70,6 @@ public final class ShopView {
             Assets.drawCenteredText(g, shopMessage, centerX, footerY);
         }
 
-        // 5. Action Prompts Card at bottom
         int promptY = height - 52;
         int promptW = 760;
         int promptH = 36;
@@ -111,7 +104,6 @@ public final class ShopView {
         g.setColor(UiKit.BORDER_SUBTLE);
         g.drawRoundRect(x, y, w, h, 12, 12);
 
-        // Key badge [ 1 ], [ 2 ] ...
         int badgeW = 32;
         int badgeH = 30;
         int badgeX = x + 16;
@@ -125,24 +117,20 @@ public final class ShopView {
         g.setColor(Color.WHITE);
         Assets.drawCenteredText(g, String.valueOf(num), badgeX + badgeW / 2, badgeY + badgeH / 2);
 
-        // Title and description
         int textX = badgeX + badgeW + 18;
         g.setFont(new Font("SansSerif", Font.BOLD, 16));
         g.setColor(Color.WHITE);
         g.drawString(u.getName(), textX, y + 32);
 
-        // Level Pill
         g.setFont(new Font("SansSerif", Font.BOLD, 12));
         g.setColor(u.isMaxed() ? new Color(255, 215, 0) : new Color(140, 200, 255));
         String lvStr = u.isMaxed() ? "MAX LEVEL" : "Level " + u.getLevel() + " / " + Upgrade.MAX_LEVEL;
         g.drawString(" (" + lvStr + ")", textX + g.getFontMetrics(new Font("SansSerif", Font.BOLD, 16)).stringWidth(u.getName()), y + 32);
 
-        // Description
         g.setFont(UiKit.FONT_BODY);
         g.setColor(UiKit.TEXT_LIGHT);
         g.drawString(u.getDescription(), textX, y + 56);
 
-        // Cost Button / Maxed badge on right
         int btnW = 120;
         int btnH = 34;
         int btnX = x + w - btnW - 20;

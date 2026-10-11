@@ -4,9 +4,7 @@ import game.Assets;
 
 import java.awt.*;
 
-/**
- * A single ingredient in a specific state (raw, chopped, cooked, or burnt).
- */
+// Ingredient with type and state (raw, chopped, cooked, burnt)
 public class Ingredient implements Item {
     private final IngredientType type;
     private IngredientState state;
@@ -44,7 +42,7 @@ public class Ingredient implements Item {
         state = IngredientState.BURNT;
     }
 
-    /** True if both ingredients have the same type AND the same state. */
+    // Check if type and state match
     public boolean isSameAs(Ingredient other) {
         return type == other.type && state == other.state;
     }
@@ -57,7 +55,7 @@ public class Ingredient implements Item {
         return state;
     }
 
-    /** File name of the sprite, e.g. "tomato_chopped" -> assets/tomato_chopped.png */
+    // Sprite asset name
     public String getSpriteName() {
         return type.name().toLowerCase() + "_" + state.name().toLowerCase();
     }

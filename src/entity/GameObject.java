@@ -2,9 +2,7 @@ package entity;
 
 import java.awt.*;
 
-/**
- * Base class for all spatial entities in the game world.
- */
+// Base class for game objects with position and size
 public abstract class GameObject {
     protected double x;
     protected double y;
@@ -18,7 +16,7 @@ public abstract class GameObject {
         this.height = height;
     }
 
-    /** Draws this entity on the canvas. */
+    // Draw object
     public abstract void draw(Graphics2D g);
 
     public Rectangle getBounds() {
@@ -33,7 +31,7 @@ public abstract class GameObject {
         return y + height / 2.0;
     }
 
-    /** Distance between the centers of two objects. */
+    // Distance between two objects
     public double distanceTo(GameObject other) {
         return Math.hypot(getCenterX() - other.getCenterX(), getCenterY() - other.getCenterY());
     }

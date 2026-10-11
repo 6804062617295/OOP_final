@@ -8,13 +8,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Loads sprite images from the "assets" folder (next to the "src" folder).
- *
- * Example: Assets.get("player") loads "assets/player.png".
- * If a file is missing, a colored placeholder box is drawn instead,
- * so the game always runs even before you add your own sprites.
- */
+// Loads images from the assets folder with fallback placeholders
 public class Assets {
     private static final String FOLDER = "assets/";
 
@@ -25,15 +19,15 @@ public class Assets {
         // Utility class: no objects needed
     }
 
-    /** Returns the image for this name, or null if there is no such file. */
+    // Returns loaded image or null
     public static BufferedImage get(String name) {
         if (cache.containsKey(name)) {
             return cache.get(name);
         }
 
         BufferedImage image = null;
-        File file = new File(FOLDER + name + ".png");
-        if (file.exists()) {
+        File file = findAssetFile(name);
+        if (file != null) {
             try {
                 image = ImageIO.read(file);
             } catch (IOException e) {
@@ -44,7 +38,30 @@ public class Assets {
         return image;
     }
 
-    /** Draws a sprite, or a colored box with a label if the sprite is missing. */
+    private static File findAssetFile(String name) {
+        String[] dirs = {FOLDER, "../" + FOLDER};
+        String target = name + ".png";
+        for (String dir : dirs) {
+            File direct = new File(dir, target);
+            if (direct.exists()) {
+                return direct;
+            }
+            File folder = new File(dir);
+            if (folder.isDirectory()) {
+                File[] list = folder.listFiles();
+                if (list != null) {
+                    for (File f : list) {
+                        if (f.getName().equalsIgnoreCase(target)) {
+                            return f;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    // Draws sprite or fallback box
     public static void draw(Graphics2D g, String name, int x, int y, int w, int h,
                             Color fallbackColor, String label) {
         BufferedImage image = get(name);
@@ -68,7 +85,7 @@ public class Assets {
         }
     }
 
-    /** Draws a floor tile, or a plain colored square if the sprite is missing. */
+    // Draws tile or fallback color
     public static void drawTile(Graphics2D g, String name, int x, int y, int size, Color fallbackColor) {
         BufferedImage image = get(name);
         if (image != null) {
@@ -79,7 +96,7 @@ public class Assets {
         }
     }
 
-    /** Draws text so that its center is at (centerX, centerY). */
+    // Draws centered text
     public static void drawCenteredText(Graphics2D g, String text, int centerX, int centerY) {
         FontMetrics fm = g.getFontMetrics();
         int textX = centerX - fm.stringWidth(text) / 2;

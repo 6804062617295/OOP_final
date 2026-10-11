@@ -5,9 +5,7 @@ import station.Station;
 
 import java.awt.*;
 
-/**
- * A hell fire hazard burning on a kitchen tile. Blocks path until extinguished.
- */
+// Fire hazard that blocks movement until put out
 public class Fire extends GameObject {
     private static final int SIZE = Station.SIZE;
 
@@ -23,10 +21,7 @@ public class Fire extends GameObject {
         animTime += dt * 8.0;
     }
 
-    /**
-     * Sprays fire extinguisher on this fire.
-     * @return true if fire is completely extinguished.
-     */
+    // Extinguishes fire over time
     public boolean extinguish(double dt) {
         health -= dt;
         return health <= 0;

@@ -4,9 +4,7 @@ import item.Recipe;
 
 import java.awt.*;
 
-/**
- * Food critic who pays triple if served quickly, or half price if slow.
- */
+// Food critic: 3x pay if fast, half price if slow
 public class CriticCustomer extends Customer {
 
     public CriticCustomer(double patienceMultiplier) {

@@ -6,11 +6,9 @@ import item.Item;
 import java.awt.*;
 import java.util.List;
 
-/**
- * The chef controlled by the player. Can move and carry one item.
- */
+// Chef character controlled by the player
 public class Player extends GameObject {
-    private static final int SIZE = 44;
+    private static final int SIZE = 48;
 
     private double speed = 220; // pixels per second
     private Item heldItem;      // null = empty hands
@@ -27,10 +25,7 @@ public class Player extends GameObject {
         this.color = color;
     }
 
-    /**
-     * Moves the player. dirX / dirY are between -1 and 1.
-     * X and Y are moved separately so the player can slide along walls.
-     */
+    // Moves player and handles wall sliding
     public void move(double dirX, double dirY, double dt,
                      List<? extends GameObject> obstacles, Rectangle worldBounds) {
         double oldX = x;
@@ -73,7 +68,7 @@ public class Player extends GameObject {
         this.heldItem = item;
     }
 
-    /** Removes the item from the player's hands and returns it. */
+    // Takes and removes held item
     public Item takeHeldItem() {
         Item item = heldItem;
         heldItem = null;
@@ -106,11 +101,15 @@ public class Player extends GameObject {
 
     @Override
     public void draw(Graphics2D g) {
-        Assets.draw(g, "player", (int) x, (int) y, width, height, color, name);
+        int drawW = 50;
+        int drawH = 56;
+        int drawX = (int) x - (drawW - width) / 2;
+        int drawY = (int) y - (drawH - height);
+        Assets.draw(g, "player", drawX, drawY, drawW, drawH, color, name);
 
         // Show the carried item above the chef's head
         if (heldItem != null) {
-            heldItem.draw(g, (int) x + 8, (int) y - 20, 28);
+            heldItem.draw(g, (int) x + (width - 28) / 2, drawY - 22, 28);
         }
     }
 }

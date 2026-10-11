@@ -4,7 +4,7 @@ import item.Ingredient;
 
 import java.awt.*;
 
-/** Chops lettuce and tomatoes. */
+// Cutting board for chopping ingredients
 public class CuttingBoard extends ProcessingStation {
 
     public CuttingBoard(int col, int row) {

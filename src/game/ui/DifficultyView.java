@@ -4,19 +4,15 @@ import game.Assets;
 
 import java.awt.*;
 
-/**
- * Renders the 3-tier difficulty selection screen for Solo Campaign and Co-op Host modes.
- */
+// Difficulty selection screen
 public final class DifficultyView {
 
     private DifficultyView() {
     }
 
     public static void draw(Graphics2D g, int width, int height) {
-        // 1. Dark atmospheric backdrop
         UiKit.drawBackdropWithGlow(g, width, height);
 
-        // Header Title
         String badge = "★ CHEF CAMPAIGN ★";
         String modeTitle = "SELECT DIFFICULTY";
         String subDesc = "Choose your kitchen shift intensity";
@@ -37,7 +33,6 @@ public final class DifficultyView {
         g.setColor(new Color(200, 190, 180));
         Assets.drawCenteredText(g, subDesc, width / 2, 118);
 
-        // 3 Cards: Easy, Normal, Hard
         int cardY = 145;
         int cardW = 265;
         int cardH = 370;
@@ -48,7 +43,7 @@ public final class DifficultyView {
         String hint2 = "Press [ 2 ] for Normal";
         String hint3 = "Press [ 3 ] for Hard";
 
-        // Card 1: Easy
+        // Easy
         UiKit.drawSelectionCard(g, startX, cardY, cardW, cardH,
                 "1", "EASY", "Apprentice Chef",
                 new String[]{
@@ -62,7 +57,7 @@ public final class DifficultyView {
                 hint1,
                 new Color(46, 125, 50), new Color(129, 199, 132));
 
-        // Card 2: Normal
+        // Normal
         UiKit.drawSelectionCard(g, startX + cardW + gap, cardY, cardW, cardH,
                 "2", "NORMAL", "Head Chef",
                 new String[]{
@@ -76,7 +71,7 @@ public final class DifficultyView {
                 hint2,
                 new Color(230, 120, 20), new Color(255, 183, 77));
 
-        // Card 3: Hard
+        // Hard
         UiKit.drawSelectionCard(g, startX + (cardW + gap) * 2, cardY, cardW, cardH,
                 "3", "HARD", "Hell's Master",
                 new String[]{
@@ -90,7 +85,6 @@ public final class DifficultyView {
                 hint3,
                 new Color(198, 40, 40), new Color(239, 154, 154));
 
-        // ESC Prompt at bottom
         int escBoxW = 340;
         int escBoxH = 38;
         int escBoxX = (width - escBoxW) / 2;

@@ -7,10 +7,7 @@ import item.Plate;
 
 import java.awt.*;
 
-/**
- * A plain table. You can put anything on it and pick it up again.
- * If there is a plate on it, you can drop ingredients onto the plate.
- */
+// Counter table for placing items or plating food
 public class Counter extends Station {
 
     public Counter(int col, int row) {
@@ -21,7 +18,7 @@ public class Counter extends Station {
     public void interact(Player player) {
         Item held = player.getHeldItem();
 
-        // 1) Empty hands: pick up whatever is on the counter
+        // Pick up item
         if (held == null) {
             if (itemOnTop != null) {
                 player.setHeldItem(itemOnTop);
@@ -30,19 +27,17 @@ public class Counter extends Station {
             return;
         }
 
-        // 2) Counter is empty:
+        // Place item
         if (itemOnTop == null) {
-            // If holding a plate with food, unload the last added ingredient onto the counter!
             if (held instanceof Plate plate && !plate.isEmpty()) {
                 itemOnTop = plate.removeLastIngredient();
                 return;
             }
-            // Otherwise, put the held item down normally
             itemOnTop = player.takeHeldItem();
             return;
         }
 
-        // 3) Both have something: try to combine an ingredient with a plate
+        // Combine with plate
         if (itemOnTop instanceof Plate plate && held instanceof Ingredient ingredient) {
             if (plate.addIngredient(ingredient)) {
                 player.takeHeldItem();
@@ -54,11 +49,7 @@ public class Counter extends Station {
         }
     }
 
-    /**
-     * Alternate interact (Q key):
-     * - If holding a plate with food: places the ENTIRE plate onto the counter.
-     * - If counter has a plate with food & hands are empty: takes top ingredient into hand.
-     */
+    // Alternate interact (Q key): place entire plate or take top ingredient
     public void alternateInteract(Player player) {
         Item held = player.getHeldItem();
 

@@ -2,10 +2,7 @@ import game.GamePanel;
 
 import javax.swing.*;
 
-/**
- * Entry point of "Restaurant Rush".
- * Creates the window and starts the game loop.
- */
+// Main entry point
 public class Main {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {

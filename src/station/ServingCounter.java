@@ -6,7 +6,7 @@ import item.Plate;
 
 import java.awt.*;
 
-/** The window where finished dishes are handed to the customers. */
+// Serving counter to deliver finished plates
 public class ServingCounter extends Station {
     private final Restaurant restaurant;
 

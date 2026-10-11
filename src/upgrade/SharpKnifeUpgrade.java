@@ -4,7 +4,7 @@ import game.Restaurant;
 import station.CuttingBoard;
 import station.Station;
 
-/** All cutting boards chop faster. */
+// Upgrade: cutting boards chop faster
 public class SharpKnifeUpgrade extends Upgrade {
 
     public SharpKnifeUpgrade() {

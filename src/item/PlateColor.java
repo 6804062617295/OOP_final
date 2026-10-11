@@ -2,9 +2,7 @@ package item;
 
 import java.awt.*;
 
-/**
- * Available plate colors and their UI representations.
- */
+// Plate colors and display values
 public enum PlateColor {
     RED("Red", new Color(225, 60, 60)),
     YELLOW("Yellow", new Color(245, 205, 40)),
@@ -28,7 +26,7 @@ public enum PlateColor {
         return color;
     }
 
-    /** Cycles to the next plate color (Red -> Yellow -> Green -> Blue -> Black -> Red). */
+    // Cycles to next plate color
     public PlateColor next() {
         PlateColor[] all = values();
         return all[(ordinal() + 1) % all.length];

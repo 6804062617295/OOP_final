@@ -6,14 +6,14 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/** A kid: very patient, only orders small dishes, pays a bit less. */
+// Kid customer: high patience, small dishes, pays less
 public class KidCustomer extends Customer {
 
     public KidCustomer(double patienceMultiplier) {
         super(randomRecipe(kidsMenu()), 60 * patienceMultiplier);
     }
 
-    /** Kids only order dishes with 2 ingredients or fewer. */
+    // Dishes with 2 ingredients or fewer
     private static List<Recipe> kidsMenu() {
         List<Recipe> smallDishes = new ArrayList<>();
         for (Recipe recipe : Recipe.MENU) {

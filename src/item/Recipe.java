@@ -7,13 +7,11 @@ import java.util.List;
 import static item.IngredientState.*;
 import static item.IngredientType.*;
 
-/**
- * A dish on the menu: a name, a price, required plate color, and exact sequence of ingredients.
- */
+// Dish recipe with required plate color and ingredient order
 public class Recipe {
 
-    /**
-     * Menu recipes according to the Hell's Kitchen specifications:
+    /*
+     * Menu recipes:
      * - A: Cooked Meat
      * - B: Chopped Tomato
      * - C: Chopped Lettuce
@@ -88,15 +86,13 @@ public class Recipe {
         this.plateColor = plateColor;
         this.ingredients = List.of(ingredients);
 
-        // Pre-compute the reversed list for reversed/male customer orders
+        // Pre-compute reversed list for demon orders
         List<Ingredient> rev = new ArrayList<>(this.ingredients);
         Collections.reverse(rev);
         this.reversedIngredients = Collections.unmodifiableList(rev);
     }
 
-    /**
-     * Checks if the given ingredients match this recipe in exact sequential order.
-     */
+    // Checks if ingredients match the recipe (supports reverse order)
     public boolean isMadeFrom(PlateColor plateColor, List<Ingredient> items, boolean reversed) {
         if (this.plateColor != plateColor) {
             return false;
@@ -115,7 +111,7 @@ public class Recipe {
         return true;
     }
 
-    /** e.g. "[Red] Hellfire Steak ($30) = Cooked Meat -> Chopped Tomato" */
+    // Recipe string format with plate color and ingredients
     public String getDescription() {
         List<String> names = new ArrayList<>();
         for (Ingredient ingredient : ingredients) {

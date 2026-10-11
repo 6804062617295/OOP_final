@@ -5,9 +5,7 @@ import item.IngredientState;
 
 import java.awt.*;
 
-/**
- * Cooks meat. Burns food if left unattended too long.
- */
+// Cooks meat, burns if left unattended
 public class Stove extends ProcessingStation {
     private double burnTime = 6.0; // seconds after cooking until it burns
 
@@ -29,7 +27,7 @@ public class Stove extends ProcessingStation {
         ingredient.cook();
     }
 
-    /** True when cooked food is sitting on the stove (and will burn soon). */
+    // True if cooked meat is about to burn
     private boolean isBurning() {
         return itemOnTop instanceof Ingredient ingredient && ingredient.getState() == IngredientState.COOKED;
     }

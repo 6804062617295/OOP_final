@@ -5,9 +5,7 @@ import item.Plate;
 
 import java.awt.*;
 
-/**
- * Dispenses clean plates and allows cycling plate colors when held empty.
- */
+// Dispenses clean plates and cycles plate colors
 public class PlateRack extends Station {
 
     public PlateRack(int col, int row) {

@@ -7,7 +7,7 @@ import item.Plate;
 
 import java.awt.*;
 
-/** A crate with an endless supply of one raw ingredient. */
+// Ingredient box with infinite supply of one item
 public class IngredientBox extends Station {
     private final IngredientType type;
     private final Ingredient icon; // only used to draw a picture on the box

@@ -17,9 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-/**
- * Main simulation state holding kitchen stations, chef, customers, and hazards.
- */
+// Main kitchen state and game logic
 public final class Restaurant {
     public static final int COLS = 15;
     public static final int ROWS = 10;
@@ -71,6 +69,10 @@ public final class Restaurant {
 
     private String message = "";
     private double messageTimer;
+
+    private boolean gameOver = false;
+    private String gameOverTitle = "Daily Revenue Target Missed!";
+    private String gameOverMessage = "";
 
     public Restaurant() {
         this(Difficulty.NORMAL);
@@ -147,6 +149,9 @@ public final class Restaurant {
         spawnTimer = 1; // first customer arrives after 1 second
         fireSpawnTimer = 25.0; // first hell fire attempt after 25s
         fires.clear();
+        gameOver = false;
+        gameOverTitle = "Daily Revenue Target Missed!";
+        gameOverMessage = "";
         for (int i = 0; i < SEAT_COUNT; i++) {
             seats[i] = null;
         }
@@ -163,7 +168,7 @@ public final class Restaurant {
 
     // ===================== Game loop =====================
 
-    /** dirX / dirY = movement direction from the keyboard (-1, 0 or 1). */
+    // Movement direction (-1, 0, or 1)
     public void update(double dt, double dirX, double dirY) {
         List<GameObject> obstacles = new ArrayList<>(stations);
         obstacles.addAll(fires);
@@ -171,7 +176,7 @@ public final class Restaurant {
         updateLogic(dt);
     }
 
-    /** Updates simulation logic without moving chef 1. Used by Dedicated Server. */
+    // Update game logic
     public void updateLogic(double dt) {
         timeLeft -= dt;
 
@@ -242,6 +247,11 @@ public final class Restaurant {
             if (customer.isOutOfPatience()) {
                 seats[i] = null;
                 lostToday++;
+                if (customer.isFatalWhenAngry()) {
+                    triggerGameOver("ANGRY INVERTED DEMON!",
+                            "The Inverted Demon lost patience! Your ghost disguise was shattered and the diner was dragged to the underworld!");
+                    return;
+                }
                 showMessage("A " + customer.getLabel() + " left angry!");
             }
         }
@@ -251,7 +261,7 @@ public final class Restaurant {
         for (int i = 0; i < SEAT_COUNT; i++) {
             if (seats[i] == null) {
                 Customer customer = createRandomCustomer();
-                customer.setPosition(20 + i * 240, 24);
+                customer.setPosition(16 + i * (Customer.CARD_WIDTH + 16), 18);
                 seats[i] = customer;
                 return;
             }
@@ -266,15 +276,14 @@ public final class Restaurant {
             return new CriticCustomer(patienceMultiplier);
         } else if (roll < 45) {
             return new KidCustomer(patienceMultiplier);
-        } else if (roll < 75) {
-            // POLYMORPHISM: MirrorCustomer demands REVERSED/REFLECTED ingredient order
-            return new MirrorCustomer(patienceMultiplier);
+        } else if (roll < 55) {
+            return new MirrorCustomer(patienceMultiplier); // Inverted Demon (10%)
         } else {
             return new NormalCustomer(patienceMultiplier);
         }
     }
 
-    /** Customers come more often on later days. */
+    // Customer spawn interval (shorter on later days)
     private double getSpawnInterval() {
         double interval = 14 - day * 1.5;
         interval += difficulty.getSpawnIntervalOffset();
@@ -353,10 +362,7 @@ public final class Restaurant {
         return nearest;
     }
 
-    /**
-     * Gives the plate to a customer who ordered it.
-     * If several customers want the same dish, the one who waited longest gets it.
-     */
+    // Serves the plate to the customer who waited the longest
     public boolean serve(Plate plate) {
         int best = -1;
         for (int i = 0; i < SEAT_COUNT; i++) {
@@ -372,7 +378,7 @@ public final class Restaurant {
         }
 
         Customer customer = seats[best];
-        int payment = customer.pay(); // POLYMORPHISM: each customer type pays differently
+        int payment = customer.pay();
         money += payment;
         earnedToday += payment;
         servedToday++;
@@ -410,6 +416,24 @@ public final class Restaurant {
     public void showMessage(String text) {
         message = text;
         messageTimer = 2.5;
+    }
+
+    public void triggerGameOver(String title, String message) {
+        this.gameOver = true;
+        this.gameOverTitle = title;
+        this.gameOverMessage = message;
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public String getGameOverTitle() {
+        return gameOverTitle;
+    }
+
+    public String getGameOverMessage() {
+        return gameOverMessage;
     }
 
     // ===================== Getters =====================
@@ -464,11 +488,11 @@ public final class Restaurant {
         drawFloor(g);
 
         for (Station station : stations) {
-            station.draw(g); // POLYMORPHISM: each station draws itself
+            station.draw(g);
         }
 
         for (Fire fire : fires) {
-            fire.draw(g); // POLYMORPHISM: each hazard draws itself
+            fire.draw(g);
         }
 
         // Highlight nearest fire if player holds extinguisher

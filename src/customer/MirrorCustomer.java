@@ -4,9 +4,7 @@ import item.Recipe;
 
 import java.awt.*;
 
-/**
- * Customer requesting dishes in reversed ingredient sequence.
- */
+// Inverted demon customer: orders ingredients in reverse
 public class MirrorCustomer extends Customer {
 
     public MirrorCustomer(double patienceMultiplier) {
@@ -15,17 +13,22 @@ public class MirrorCustomer extends Customer {
 
     @Override
     public boolean isReversed() {
-        return true; // POLYMORPHISM: demands reflected/reversed order
+        return true; // demands reversed order
+    }
+
+    @Override
+    public boolean isFatalWhenAngry() {
+        return true; // instant game over if patience runs out
     }
 
     @Override
     protected double getPaymentMultiplier() {
-        return 1.1; // 10% bonus tip for following custom reversed order
+        return 1.25; // pays extra tip
     }
 
     @Override
     public String getLabel() {
-        return "Mirror Demon";
+        return "Inverted Demon";
     }
 
     @Override
@@ -35,6 +38,6 @@ public class MirrorCustomer extends Customer {
 
     @Override
     protected Color getColor() {
-        return new Color(90, 150, 235); // Mystic mirror cyan-blue
+        return new Color(90, 150, 235);
     }
 }

@@ -5,7 +5,7 @@ import item.Plate;
 
 import java.awt.*;
 
-/** Throws away the held item. A plate is kept, only the food on it is thrown away. */
+// Trash can: discards held item or clears food off a plate
 public class TrashCan extends Station {
 
     public TrashCan(int col, int row) {

@@ -1,6 +1,6 @@
 package item;
 
-/** The state an ingredient is in. Raw -> Chopped / Cooked -> (Burnt). */
+// Ingredient states: raw, chopped, cooked, burnt
 public enum IngredientState {
     //        name prefix  short tag (used on placeholder boxes)
     RAW("", ""),

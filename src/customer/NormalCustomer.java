@@ -4,7 +4,7 @@ import item.Recipe;
 
 import java.awt.*;
 
-/** A regular customer. Orders anything, average patience, normal price. */
+// Regular customer with standard patience and pay
 public class NormalCustomer extends Customer {
 
     public NormalCustomer(double patienceMultiplier) {

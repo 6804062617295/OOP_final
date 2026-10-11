@@ -7,9 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * A colored plate that collects ingredients in sequential order to build a dish.
- */
+// Plate that holds ingredients for dishes
 public class Plate implements Item {
     private static final int MAX_INGREDIENTS = 4;
 
@@ -24,10 +22,7 @@ public class Plate implements Item {
         this.color = color;
     }
 
-    /**
-     * Tries to put an ingredient onto the plate.
-     * Rules: no burnt food, and plate cannot exceed max capacity.
-     */
+    // Adds an ingredient if valid
     public boolean addIngredient(Ingredient ingredient) {
         if (ingredient.getState() == IngredientState.BURNT) {
             return false;
@@ -44,10 +39,7 @@ public class Plate implements Item {
         return true;
     }
 
-    /**
-     * Removes and returns the most recently added ingredient from the plate (LIFO).
-     * Returns null if the plate is empty.
-     */
+    // Removes the top ingredient
     public Ingredient removeLastIngredient() {
         if (ingredients.isEmpty()) {
             return null;
@@ -55,12 +47,12 @@ public class Plate implements Item {
         return ingredients.remove(ingredients.size() - 1);
     }
 
-    /** Checks matching against a recipe for standard order. */
+    // Checks if plate matches recipe
     public boolean matches(Recipe recipe) {
         return matches(recipe, false);
     }
 
-    /** Checks matching against a recipe, considering whether order is reversed. */
+    // Checks if plate matches recipe (supports reverse order)
     public boolean matches(Recipe recipe, boolean reversed) {
         return recipe.isMadeFrom(color, ingredients, reversed);
     }
@@ -73,7 +65,7 @@ public class Plate implements Item {
         ingredients.clear();
     }
 
-    /** Switches to the next available color if the plate is empty. */
+    // Cycles to next plate color
     public void cycleColor() {
         this.color = this.color.next();
     }
@@ -86,7 +78,7 @@ public class Plate implements Item {
         this.color = color;
     }
 
-    /** Read-only view, preventing direct modification from outside (ENCAPSULATION). */
+    // Read-only list of ingredients
     public List<Ingredient> getIngredients() {
         return Collections.unmodifiableList(ingredients);
     }
@@ -100,23 +92,19 @@ public class Plate implements Item {
 
     @Override
     public void draw(Graphics2D g, int x, int y, int size) {
-        // Base plate surface with color rim
         Color rimColor = color.getColor();
         g.setColor(rimColor);
         g.fillOval(x, y, size, size);
 
-        // Darker outer ring
         g.setColor(rimColor.darker());
         g.setStroke(new BasicStroke(2));
         g.drawOval(x + 1, y + 1, size - 2, size - 2);
         g.setStroke(new BasicStroke(1));
 
-        // Inner ceramic plate
         int inset = (int) (size * 0.16);
         g.setColor(new Color(245, 245, 242));
         g.fillOval(x + inset, y + inset, size - inset * 2, size - inset * 2);
 
-        // If empty, draw color label or badge
         if (isEmpty()) {
             g.setFont(new Font("SansSerif", Font.BOLD, Math.max(9, size / 4)));
             g.setColor(rimColor.darker());
@@ -124,7 +112,7 @@ public class Plate implements Item {
             return;
         }
 
-        // Draw ingredients in sequential order (1 to 4)
+        // Draw ingredients
         if (ingredients.size() == 1) {
             ingredients.get(0).draw(g, x + size / 4, y + size / 4, size / 2);
         } else if (ingredients.size() == 2) {

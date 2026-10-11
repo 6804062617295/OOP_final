@@ -2,7 +2,7 @@ package upgrade;
 
 import game.Restaurant;
 
-/** Nicer decoration: new customers wait longer before getting angry. */
+// Upgrade: customers wait longer before leaving
 public class CozyDecorUpgrade extends Upgrade {
 
     public CozyDecorUpgrade() {

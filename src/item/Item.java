@@ -2,9 +2,7 @@ package item;
 
 import java.awt.*;
 
-/**
- * Portable item that can be carried by a player or placed on stations.
- */
+// Item that can be held or placed on stations
 public interface Item {
     String getName();
 

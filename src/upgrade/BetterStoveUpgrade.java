@@ -4,7 +4,7 @@ import game.Restaurant;
 import station.Station;
 import station.Stove;
 
-/** All stoves cook faster. */
+// Upgrade: stoves cook faster
 public class BetterStoveUpgrade extends Upgrade {
 
     public BetterStoveUpgrade() {

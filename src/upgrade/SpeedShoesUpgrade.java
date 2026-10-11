@@ -2,7 +2,7 @@ package upgrade;
 
 import game.Restaurant;
 
-/** The chef walks faster. */
+// Upgrade: chef walks faster
 public class SpeedShoesUpgrade extends Upgrade {
 
     public SpeedShoesUpgrade() {

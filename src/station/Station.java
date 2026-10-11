@@ -7,9 +7,7 @@ import item.Item;
 
 import java.awt.*;
 
-/**
- * Base class for kitchen stations located on a grid tile.
- */
+// Base class for kitchen stations
 public abstract class Station extends GameObject {
     public static final int SIZE = 64;
 
@@ -26,10 +24,10 @@ public abstract class Station extends GameObject {
         this.label = label;
     }
 
-    /** Called when the player presses the interact key next to this station. */
+    // Called when player interacts with this station
     public abstract void interact(Player player);
 
-    /** Called every frame. Most stations do nothing, some subclasses override it. */
+    // Update state each frame
     public void update(double dt) {
     }
 

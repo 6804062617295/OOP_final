@@ -1,9 +1,6 @@
 package game;
 
-/**
- * Kitchen difficulty. Each level stores the numbers that change how hard a shift is,
- * so the rest of the game never has to check "if difficulty == 1".
- */
+// Difficulty levels for the kitchen shift
 public enum Difficulty {
     //        title     rank               patience  chefSpeed  workSpeed  burnTime  spawnOffset  minSpawn
     EASY(    "EASY",   "Apprentice Chef", 2.0,      100,       1.0,       14.0,     6,           8),
@@ -32,12 +29,12 @@ public enum Difficulty {
         this.minSpawnInterval = minSpawnInterval;
     }
 
-    /** Level number used over the network (1 = Easy, 2 = Normal, 3 = Hard). */
+    // 1 = Easy, 2 = Normal, 3 = Hard
     public int getLevel() {
         return ordinal() + 1;
     }
 
-    /** Converts a network level number back to a difficulty. Unknown values become NORMAL. */
+    // Converts level number back to Difficulty
     public static Difficulty fromLevel(int level) {
         Difficulty[] all = values();
         return (level >= 1 && level <= all.length) ? all[level - 1] : NORMAL;

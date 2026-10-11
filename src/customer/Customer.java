@@ -10,11 +10,12 @@ import java.awt.*;
 import java.util.List;
 import java.util.Random;
 
-/**
- * Abstract customer waiting for a dish in the dining area.
- */
+// Base class for restaurant customers
 public abstract class Customer extends GameObject {
-    public static final int SIZE = 56;
+    public static final int CARD_WIDTH = 224;
+    public static final int CARD_HEIGHT = 72;
+    public static final int AVATAR_SIZE = 42;
+    public static final int SIZE = 56; // backwards compatibility
     private static final Random RANDOM = new Random();
 
     private Recipe order;
@@ -30,13 +31,11 @@ public abstract class Customer extends GameObject {
     }
 
     protected Customer(Recipe order, double patienceSeconds) {
-        super(0, 0, SIZE, SIZE);
+        super(0, 0, CARD_WIDTH, CARD_HEIGHT);
         this.order = order;
         this.maxPatience = patienceSeconds;
         this.patience = patienceSeconds;
     }
-
-    // ----- Things every subclass must provide -----
 
     public abstract String getLabel();
 
@@ -44,29 +43,27 @@ public abstract class Customer extends GameObject {
 
     protected abstract Color getColor();
 
-    // ----- Things subclasses MAY change (POLYMORPHISM / OVERRIDING) -----
-
-    /**
-     * Whether this customer wants the ingredient order reversed (e.g. MaleCustomer).
-     * Normal customers use standard order (false).
-     */
+    // Custom behavior overrides
     public boolean isReversed() {
         return false;
     }
 
-    /** Normal price = 1.0. VIPs pay more, kids pay less. */
+    // Instant game over if patience runs out (Inverted Demon)
+    public boolean isFatalWhenAngry() {
+        return false;
+    }
+
+    // Normal price = 1.0. VIPs pay more, kids pay less
     protected double getPaymentMultiplier() {
         return 1.0;
     }
 
-    /** How much money this customer pays. Faster service = bigger tip. */
+    // Payment calculation with tips
     public int pay() {
         int price = order.getPrice();
         int tip = (int) Math.round(price * 0.5 * getPatienceRatio());
         return (int) Math.round((price + tip) * getPaymentMultiplier());
     }
-
-    // ----- Shared behaviour -----
 
     public void update(double dt) {
         patience -= dt;
@@ -76,7 +73,7 @@ public abstract class Customer extends GameObject {
         return patience <= 0;
     }
 
-    /** 1.0 = just arrived, 0.0 = about to leave. */
+    // Patience ratio (1.0 to 0.0)
     public double getPatienceRatio() {
         return Math.max(0, patience / maxPatience);
     }
@@ -97,10 +94,7 @@ public abstract class Customer extends GameObject {
         return getClass().getSimpleName();
     }
 
-    /**
-     * Checks if the plate matches this customer's exact order,
-     * polymorphically considering whether this customer requires a reversed recipe.
-     */
+    // Checks if the plate matches this customer's order
     public boolean wants(Plate plate) {
         return plate.matches(order, isReversed());
     }
@@ -109,7 +103,7 @@ public abstract class Customer extends GameObject {
         return order;
     }
 
-    /** Helper for subclasses: pick a random dish from a list. */
+    // Pick a random dish from a list
     protected static Recipe randomRecipe(List<Recipe> choices) {
         return choices.get(RANDOM.nextInt(choices.size()));
     }
@@ -118,105 +112,119 @@ public abstract class Customer extends GameObject {
 
     @Override
     public void draw(Graphics2D g) {
-        int px = (int) x;
-        int py = (int) y;
-        Assets.draw(g, getSpriteName(), px, py, width, height, getColor(), getLabel());
-        drawPatienceBar(g, px, py + height + 4);
-        drawOrderBubble(g, px + width + 8, py);
-    }
-
-    private void drawPatienceBar(Graphics2D g, int barX, int barY) {
-        double ratio = getPatienceRatio();
-        g.setColor(Color.DARK_GRAY);
-        g.fillRect(barX, barY, width, 6);
-
-        if (ratio > 0.5) {
-            g.setColor(new Color(80, 220, 80));
-        } else if (ratio > 0.25) {
-            g.setColor(Color.ORANGE);
-        } else {
-            g.setColor(Color.RED);
-        }
-        g.fillRect(barX, barY, (int) (width * ratio), 6);
-    }
-
-    private void drawOrderBubble(Graphics2D g, int bubbleX, int bubbleY) {
+        int cx = (int) x;
+        int cy = (int) y;
         List<Ingredient> parts = isReversed() ? order.getReversedIngredients() : order.getIngredients();
         Color plateColor = order.getPlateColor().getColor();
 
-        Font titleFont = new Font("SansSerif", Font.BOLD, 12);
-        String title = order.getName() + " $" + order.getPrice();
-        int titleWidth = g.getFontMetrics(titleFont).stringWidth(title);
-
-        int badgeWidth = isReversed() ? 66 : 0;
-        int topWidth = 32 + titleWidth + (isReversed() ? (10 + badgeWidth) : 0) + 12;
-        int step = 38;
-        int trayWidth = parts.size() * step - (step - 22) + 12;
-        int bottomWidth = trayWidth + 28;
-        int bubbleWidth = Math.max(160, Math.max(topWidth, bottomWidth));
-        int bubbleHeight = 58;
-
-        // Prevent bubble from overflowing right edge of the screen
-        bubbleX = Math.min(bubbleX, 960 - bubbleWidth - 8);
-
-        // Draw bubble card (White rounded background)
+        // Card shadow and body
+        g.setColor(new Color(0, 0, 0, 22));
+        g.fillRoundRect(cx + 1, cy + 2, CARD_WIDTH, CARD_HEIGHT, 12, 12);
         g.setColor(Color.WHITE);
-        g.fillRoundRect(bubbleX, bubbleY, bubbleWidth, bubbleHeight, 12, 12);
+        g.fillRoundRect(cx, cy, CARD_WIDTH, CARD_HEIGHT, 12, 12);
 
-        // Distinct Left Accent Stripe in the plate's color
+        // Plate color stripe
         g.setColor(plateColor);
-        g.fillRoundRect(bubbleX, bubbleY, 8, bubbleHeight, 10, 10);
-        g.fillRect(bubbleX + 4, bubbleY, 4, bubbleHeight);
+        g.fillRoundRect(cx, cy, 7, CARD_HEIGHT, 10, 10);
+        g.fillRect(cx + 4, cy, 3, CARD_HEIGHT);
 
-        // Outer Card Border
-        g.setColor(isReversed() ? new Color(220, 60, 60) : new Color(190, 190, 195));
-        g.setStroke(new BasicStroke(isReversed() ? 2 : 1));
-        g.drawRoundRect(bubbleX, bubbleY, bubbleWidth, bubbleHeight, 12, 12);
-        g.setStroke(new BasicStroke(1));
-
-        // Plate indicator icon (solid colored disc with border)
-        g.setColor(plateColor);
-        g.fillOval(bubbleX + 13, bubbleY + 7, 12, 12);
-        g.setColor(plateColor.darker());
-        g.drawOval(bubbleX + 13, bubbleY + 7, 12, 12);
-
-        // Recipe Title & Price with color tag (e.g. "[RED] Hellfire Steak $30")
-        g.setColor(Color.BLACK);
-        g.setFont(titleFont);
-        g.drawString(title, bubbleX + 30, bubbleY + 18);
-
-        // Pill badge for reversed order (cleanly separated on the top-right)
+        // Card border
         if (isReversed()) {
-            int badgeX = bubbleX + bubbleWidth - badgeWidth - 6;
-            int badgeY = bubbleY + 5;
-            g.setColor(new Color(255, 235, 235));
-            g.fillRoundRect(badgeX, badgeY, badgeWidth, 16, 6, 6);
-            g.setColor(new Color(220, 40, 40));
-            g.drawRoundRect(badgeX, badgeY, badgeWidth, 16, 6, 6);
-            g.setFont(new Font("SansSerif", Font.BOLD, 10));
-            Assets.drawCenteredText(g, "REVERSE", badgeX + badgeWidth / 2, badgeY + 11);
+            g.setColor(new Color(220, 50, 50));
+            g.setStroke(new BasicStroke(2));
+            g.drawRoundRect(cx, cy, CARD_WIDTH, CARD_HEIGHT, 12, 12);
+            g.setStroke(new BasicStroke(1));
+        } else {
+            g.setColor(new Color(205, 205, 215));
+            g.drawRoundRect(cx, cy, CARD_WIDTH, CARD_HEIGHT, 12, 12);
         }
 
-        // Mini Plate Tray underneath ingredients in the exact plate color!
-        int trayX = bubbleX + 14;
-        int trayY = bubbleY + 25;
-        int trayHeight = 27;
+        // Avatar & patience bar
+        int ax = cx + 10;
+        int ay = cy + 8;
+        Assets.draw(g, getSpriteName(), ax, ay, AVATAR_SIZE, AVATAR_SIZE, getColor(), getLabel());
+        drawPatienceBar(g, ax, ay + AVATAR_SIZE + 4, AVATAR_SIZE, 6);
 
-        // Subtle plate color fill + border
-        g.setColor(new Color(plateColor.getRed(), plateColor.getGreen(), plateColor.getBlue(), 35));
-        g.fillRoundRect(trayX, trayY, trayWidth, trayHeight, 8, 8);
+        // Order header
+        int rightX = cx + 58;
+        int availWidth = CARD_WIDTH - 58 - 8;
+
         g.setColor(plateColor);
-        g.drawRoundRect(trayX, trayY, trayWidth, trayHeight, 8, 8);
+        g.fillOval(rightX, cy + 9, 10, 10);
+        g.setColor(plateColor.darker());
+        g.drawOval(rightX, cy + 9, 10, 10);
 
-        // Draw ingredient sequence with clear centered arrows inside the plate tray
+        String title = order.getName();
+        String price = "$" + order.getPrice();
+
+        g.setFont(new Font("SansSerif", Font.BOLD, 11));
+        g.setColor(new Color(25, 25, 30));
+        g.drawString(title, rightX + 14, cy + 18);
+
+        if (isReversed()) {
+            boolean fatal = isFatalWhenAngry();
+            String badgeText = fatal ? "☠ REV" : "REV";
+            int badgeW = fatal ? 40 : 34;
+            int badgeH = 14;
+            int badgeX = cx + CARD_WIDTH - badgeW - 6;
+            int badgeY = cy + 6;
+            g.setColor(fatal ? new Color(255, 215, 215) : new Color(255, 235, 235));
+            g.fillRoundRect(badgeX, badgeY, badgeW, badgeH, 4, 4);
+            g.setColor(fatal ? new Color(190, 20, 20) : new Color(220, 40, 40));
+            g.drawRoundRect(badgeX, badgeY, badgeW, badgeH, 4, 4);
+            g.setFont(new Font("SansSerif", Font.BOLD, fatal ? 8 : 9));
+            Assets.drawCenteredText(g, badgeText, badgeX + badgeW / 2, badgeY + 10);
+
+            g.setColor(new Color(40, 140, 40));
+            g.setFont(new Font("SansSerif", Font.BOLD, 10));
+            int priceW = g.getFontMetrics().stringWidth(price);
+            g.drawString(price, badgeX - priceW - 4, cy + 17);
+        } else {
+            g.setColor(new Color(40, 140, 40));
+            g.setFont(new Font("SansSerif", Font.BOLD, 10));
+            int priceW = g.getFontMetrics().stringWidth(price);
+            g.drawString(price, cx + CARD_WIDTH - priceW - 8, cy + 18);
+        }
+
+        // Ingredient tray
+        int trayX = rightX;
+        int trayY = cy + 26;
+        int trayH = 37;
+        int step = (parts.size() <= 2) ? 34 : 26;
+        int trayW = parts.size() * step - (step - 22) + 12;
+        trayW = Math.min(availWidth, trayW);
+
+        g.setColor(new Color(plateColor.getRed(), plateColor.getGreen(), plateColor.getBlue(), 30));
+        g.fillRoundRect(trayX, trayY, trayW, trayH, 8, 8);
+        g.setColor(plateColor);
+        g.drawRoundRect(trayX, trayY, trayW, trayH, 8, 8);
+
         for (int i = 0; i < parts.size(); i++) {
             int ix = trayX + 6 + i * step;
-            parts.get(i).draw(g, ix, trayY + 2, 22);
+            parts.get(i).draw(g, ix, trayY + 7, 22);
             if (i < parts.size() - 1) {
                 g.setColor(new Color(90, 90, 105));
-                g.setFont(new Font("SansSerif", Font.BOLD, 12));
-                Assets.drawCenteredText(g, "→", ix + 22 + (step - 22) / 2, trayY + trayHeight / 2);
+                g.setFont(new Font("SansSerif", Font.BOLD, 11));
+                Assets.drawCenteredText(g, "→", ix + 22 + (step - 22) / 2, trayY + trayH / 2);
             }
+        }
+    }
+
+    private void drawPatienceBar(Graphics2D g, int barX, int barY, int barW, int barH) {
+        double ratio = getPatienceRatio();
+        g.setColor(new Color(60, 60, 65));
+        g.fillRoundRect(barX, barY, barW, barH, 4, 4);
+
+        if (ratio > 0.5) {
+            g.setColor(new Color(75, 205, 75));
+        } else if (ratio > 0.25) {
+            g.setColor(new Color(245, 160, 40));
+        } else {
+            g.setColor(new Color(230, 50, 50));
+        }
+        int fillW = (int) Math.round(barW * ratio);
+        if (fillW > 0) {
+            g.fillRoundRect(barX, barY, fillW, barH, 4, 4);
         }
     }
 }

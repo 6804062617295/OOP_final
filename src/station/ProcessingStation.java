@@ -8,9 +8,7 @@ import item.Plate;
 
 import java.awt.*;
 
-/**
- * A station that transforms an ingredient over time (e.g. chopping, cooking).
- */
+// Station that processes ingredients over time (chopping, cooking)
 public abstract class ProcessingStation extends Station {
     protected double progress;          // seconds of work done
     protected final double processTime; // seconds needed to finish
@@ -22,10 +20,10 @@ public abstract class ProcessingStation extends Station {
         this.processTime = processTime;
     }
 
-    /** Can this station work on that ingredient? */
+    // Checks if this ingredient can be processed
     protected abstract boolean canProcess(Ingredient ingredient);
 
-    /** What happens to the ingredient when the work is done. */
+    // Called when processing completes
     protected abstract void finish(Ingredient ingredient);
 
     @Override
@@ -55,7 +53,7 @@ public abstract class ProcessingStation extends Station {
         progress = 0;
     }
 
-    /** True while there is an ingredient that still needs work. */
+    // True while ingredient is being processed
     public boolean isWorking() {
         return itemOnTop instanceof Ingredient ingredient && canProcess(ingredient);
     }

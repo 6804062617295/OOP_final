@@ -83,7 +83,10 @@ public final class GamePanel extends JPanel implements ActionListener, KeyListen
 
         restaurant.update(dt, dirX, dirY);
 
-        if (restaurant.isDayOver()) {
+        if (restaurant.isGameOver()) {
+            screen = Screen.GAME_OVER;
+            SoundManager.stopBgm();
+        } else if (restaurant.isDayOver()) {
             screen = restaurant.reachedTarget() ? Screen.SHOP : Screen.GAME_OVER;
             shopMessage = "";
         }

@@ -4,9 +4,7 @@ import game.Assets;
 
 import java.awt.*;
 
-/**
- * Reusable UI styling constants and rendering primitives for Hell's Kitchen.
- */
+// UI helpers and styling constants
 public final class UiKit {
 
     // Theme Colors
@@ -33,9 +31,7 @@ public final class UiKit {
         // Utility class
     }
 
-    /**
-     * Draws dark frosted backdrop with a fiery gradient glow at the top.
-     */
+    // Draws dark background with top glow
     public static void drawBackdropWithGlow(Graphics2D g, int width, int height) {
         g.setColor(BG_DARK);
         g.fillRect(0, 0, width, height);
@@ -47,9 +43,7 @@ public final class UiKit {
         g.fillRect(0, 0, width, 160);
     }
 
-    /**
-     * Draws a modal card with smooth rounded borders.
-     */
+    // Draws a rounded modal panel
     public static void drawModalCard(Graphics2D g, int x, int y, int w, int h, Color borderColor) {
         g.setColor(PANEL_BG);
         g.fillRoundRect(x, y, w, h, 18, 18);
@@ -57,27 +51,21 @@ public final class UiKit {
         g.drawRoundRect(x, y, w, h, 18, 18);
     }
 
-    /**
-     * Draws an interactive game mode / difficulty selection card.
-     */
+    // Draws difficulty/mode selection card
     public static void drawSelectionCard(Graphics2D g, int x, int y, int w, int h,
                                          String keyNum, String title, String subtitle,
                                          String[] bullets, String actionHint,
                                          Color baseColor, Color accentColor) {
-        // Card Background
         g.setColor(CARD_BG);
         g.fillRoundRect(x, y, w, h, 14, 14);
 
-        // Top accent bar
         g.setColor(baseColor);
         g.fillRoundRect(x, y, w, 6, 14, 14);
         g.fillRect(x, y + 3, w, 3);
 
-        // Outer Border
         g.setColor(new Color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), 90));
         g.drawRoundRect(x, y, w, h, 14, 14);
 
-        // Key Badge [ 1 ] / [ 2 ] / [ 3 ]
         int badgeW = 34;
         int badgeH = 26;
         int badgeX = x + 16;
@@ -89,17 +77,14 @@ public final class UiKit {
         g.setFont(FONT_KEY);
         Assets.drawCenteredText(g, keyNum, badgeX + badgeW / 2, badgeY + badgeH / 2);
 
-        // Card Title
         g.setFont(new Font("SansSerif", Font.BOLD, 17));
         g.setColor(Color.WHITE);
         g.drawString(title, badgeX + badgeW + 12, badgeY + 18);
 
-        // Card Subtitle
         g.setFont(new Font("SansSerif", Font.PLAIN, 11));
         g.setColor(TEXT_MUTED);
         g.drawString(subtitle, badgeX + badgeW + 12, badgeY + 34);
 
-        // Bullets
         g.setFont(FONT_BODY);
         g.setColor(TEXT_LIGHT);
         int textY = y + 78;
@@ -108,7 +93,6 @@ public final class UiKit {
             textY += 20;
         }
 
-        // Action Button pill at bottom
         int btnW = w - 32;
         int btnH = 32;
         int btnX = x + 16;
@@ -123,9 +107,7 @@ public final class UiKit {
         Assets.drawCenteredText(g, actionHint, btnX + btnW / 2, btnY + btnH / 2);
     }
 
-    /**
-     * Draws a hotkey pill badge followed by a description label.
-     */
+    // Draws a key badge and label
     public static void drawKeyControl(Graphics2D g, String key, String desc, int x, int y) {
         g.setFont(FONT_KEY);
         FontMetrics fm = g.getFontMetrics();
@@ -145,9 +127,7 @@ public final class UiKit {
         g.drawString("  :  " + desc, x + kw, y);
     }
 
-    /**
-     * Draws an interactive styled button.
-     */
+    // Draws a styled button
     public static void drawButton(Graphics2D g, int x, int y, int w, int h, String text,
                                   Color bg, Color border, Color textCol) {
         g.setColor(bg);

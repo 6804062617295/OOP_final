@@ -2,7 +2,7 @@ package item;
 
 import java.awt.*;
 
-/** All kinds of raw ingredients in the kitchen, and what can be done with them. */
+// Kitchen ingredients and properties
 public enum IngredientType {
     //       name       placeholder color          canChop  canCook
     BREAD("Bread", new Color(222, 184, 135), false, false),
