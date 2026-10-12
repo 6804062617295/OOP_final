@@ -31,10 +31,10 @@ public final class ShopView {
         Assets.drawCenteredText(g, "DAY " + restaurant.getDay() + " SUMMARY & SHOP", centerX, 76);
 
         // Stats summary
-        int statsW = 845;
-        int statsH = 75;
+        int statsW = 672;
+        int statsH = 70;
         int statsX = (width - statsW) / 2;
-        int statsY = 105;
+        int statsY = 100;
 
         g.setColor(UiKit.PANEL_BG);
         g.fillRoundRect(statsX, statsY, statsW, statsH, 14, 14);
@@ -53,9 +53,9 @@ public final class ShopView {
 
         // Upgrades
         List<Upgrade> upgrades = restaurant.getUpgrades();
-        int upgradeY = 195;
-        int cardH = 80;
-        int cardGap = 12;
+        int upgradeY = 180;
+        int cardH = 64;
+        int cardGap = 8;
 
         for (int i = 0; i < upgrades.size(); i++) {
             Upgrade u = upgrades.get(i);
@@ -63,24 +63,24 @@ public final class ShopView {
             drawUpgradeCard(g, statsX, y, statsW, cardH, i + 1, u, restaurant.getMoney());
         }
 
-        int footerY = upgradeY + upgrades.size() * (cardH + cardGap) + 12;
+        int footerY = upgradeY + upgrades.size() * (cardH + cardGap) + 10;
         if (shopMessage != null && !shopMessage.isBlank()) {
             g.setFont(UiKit.FONT_SUBTITLE);
             g.setColor(UiKit.TEXT_CREAM);
             Assets.drawCenteredText(g, shopMessage, centerX, footerY);
         }
 
-        int promptY = height - 52;
-        int promptW = 760;
-        int promptH = 36;
+        int promptY = height - 42;
+        int promptW = 672;
+        int promptH = 32;
         int promptX = (width - promptW) / 2;
 
         g.setColor(new Color(24, 26, 38, 220));
-        g.fillRoundRect(promptX, promptY, promptW, promptH, 10, 10);
+        g.fillRoundRect(promptX, promptY, promptW, promptH, 8, 8);
         g.setColor(UiKit.BORDER_SUBTLE);
-        g.drawRoundRect(promptX, promptY, promptW, promptH, 10, 10);
+        g.drawRoundRect(promptX, promptY, promptW, promptH, 8, 8);
 
-        g.setFont(UiKit.FONT_BODY_BOLD);
+        g.setFont(new Font("SansSerif", Font.BOLD, 12));
         g.setColor(Color.WHITE);
         String actionPrompt = "Press [ 1 - " + upgrades.size() + " ] to Buy  •  "
                 + "Press [ ENTER ] to Start Day " + (restaurant.getDay() + 1) + "  •  "

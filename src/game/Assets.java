@@ -1,32 +1,41 @@
 package game;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
-// Loads images from the assets folder with fallback placeholders
+// Loads images and gif animations from the assets folder with fallback placeholders
 public class Assets {
     private static final String FOLDER = "assets/";
 
     // Remembers images we already loaded. A null value means "file not found".
     private static final Map<String, BufferedImage> cache = new HashMap<>();
+    private static final Map<String, BufferedImage[]> animCache = new HashMap<>();
 
     private Assets() {
         // Utility class: no objects needed
     }
 
-    // Returns loaded image or null
+    // Returns loaded single image or first frame of gif
     public static BufferedImage get(String name) {
         if (cache.containsKey(name)) {
             return cache.get(name);
         }
 
-        BufferedImage image = null;
         File file = findAssetFile(name);
+        if (file != null && file.getName().toLowerCase().endsWith(".gif")) {
+            BufferedImage[] frames = getFrames(name);
+            return (frames != null && frames.length > 0) ? frames[0] : null;
+        }
+
+        BufferedImage image = null;
         if (file != null) {
             try {
                 image = ImageIO.read(file);
@@ -38,21 +47,79 @@ public class Assets {
         return image;
     }
 
+    // Returns all frames of an animated gif
+    public static BufferedImage[] getFrames(String name) {
+        if (animCache.containsKey(name)) {
+            return animCache.get(name);
+        }
+
+        File file = findAssetFile(name);
+        if (file != null && file.getName().toLowerCase().endsWith(".gif")) {
+            try (ImageInputStream stream = ImageIO.createImageInputStream(file)) {
+                Iterator<ImageReader> readers = ImageIO.getImageReadersByFormatName("gif");
+                if (readers.hasNext()) {
+                    ImageReader reader = readers.next();
+                    reader.setInput(stream);
+                    int count = reader.getNumImages(true);
+                    if (count > 0) {
+                        BufferedImage[] frames = new BufferedImage[count];
+                        for (int i = 0; i < count; i++) {
+                            frames[i] = reader.read(i);
+                        }
+                        animCache.put(name, frames);
+                        cache.put(name, frames[0]);
+                        return frames;
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Could not load GIF frames for " + file.getPath());
+            }
+        }
+
+        // Fallback to single static image if not a multi-frame gif
+        BufferedImage single = get(name);
+        if (single != null) {
+            BufferedImage[] frames = new BufferedImage[]{single};
+            animCache.put(name, frames);
+            return frames;
+        }
+
+        animCache.put(name, null);
+        return null;
+    }
+
+    // Returns the current frame based on elapsed animation time
+    public static BufferedImage getFrame(String name, double animTime) {
+        BufferedImage[] frames = getFrames(name);
+        if (frames == null || frames.length == 0) {
+            return null;
+        }
+        int idx = (int) Math.floor(animTime) % frames.length;
+        if (idx < 0) {
+            idx = (idx % frames.length + frames.length) % frames.length;
+        }
+        return frames[idx];
+    }
+
     private static File findAssetFile(String name) {
         String[] dirs = {FOLDER, "../" + FOLDER};
-        String target = name + ".png";
+        String[] exts = {".gif", ".png", ".jpg", ".jpeg"};
         for (String dir : dirs) {
-            File direct = new File(dir, target);
-            if (direct.exists()) {
-                return direct;
+            for (String ext : exts) {
+                File direct = new File(dir, name + ext);
+                if (direct.exists()) {
+                    return direct;
+                }
             }
             File folder = new File(dir);
             if (folder.isDirectory()) {
                 File[] list = folder.listFiles();
                 if (list != null) {
                     for (File f : list) {
-                        if (f.getName().equalsIgnoreCase(target)) {
-                            return f;
+                        for (String ext : exts) {
+                            if (f.getName().equalsIgnoreCase(name + ext)) {
+                                return f;
+                            }
                         }
                     }
                 }

@@ -33,10 +33,10 @@ public final class DifficultyView {
         g.setColor(new Color(200, 190, 180));
         Assets.drawCenteredText(g, subDesc, width / 2, 118);
 
-        int cardY = 145;
-        int cardW = 265;
-        int cardH = 370;
-        int gap = 25;
+        int cardY = 135;
+        int cardW = 216;
+        int cardH = 325;
+        int gap = 14;
         int startX = (width - (3 * cardW + 2 * gap)) / 2;
 
         String hint1 = "Press [ 1 ] for Easy";
@@ -47,12 +47,12 @@ public final class DifficultyView {
         UiKit.drawSelectionCard(g, startX, cardY, cardW, cardH,
                 "1", "EASY", "Apprentice Chef",
                 new String[]{
-                        "• Move Speed +100 (Super fast)",
-                        "• Customer Patience: 2x longer",
-                        "• 2x Faster Chopping & Cooking",
-                        "• Stove Burn Warning: 20s",
-                        "• Slower customer arrivals",
-                        "• Recommended for beginners"
+                        "• Move Speed +100",
+                        "• Customer Patience: 2x",
+                        "• 2x Faster Prep & Cook",
+                        "• Burn Warning: 20s",
+                        "• Relaxed customer flow",
+                        "• Best for beginners"
                 },
                 hint1,
                 new Color(46, 125, 50), new Color(129, 199, 132));
@@ -61,12 +61,12 @@ public final class DifficultyView {
         UiKit.drawSelectionCard(g, startX + cardW + gap, cardY, cardW, cardH,
                 "2", "NORMAL", "Head Chef",
                 new String[]{
-                        "• Standard Chef Movement Speed",
-                        "• Balanced Customer Patience",
-                        "• Standard Cooking Speeds",
-                        "• Stove Burn Warning: 6s",
-                        "• Regular customer rush flow",
-                        "• Standard Hell's Kitchen rules"
+                        "• Standard Speed",
+                        "• Balanced Patience",
+                        "• Standard Cook Speeds",
+                        "• Burn Warning: 6s",
+                        "• Standard Rush Flow",
+                        "• Standard Rules"
                 },
                 hint2,
                 new Color(230, 120, 20), new Color(255, 183, 77));
@@ -75,27 +75,27 @@ public final class DifficultyView {
         UiKit.drawSelectionCard(g, startX + (cardW + gap) * 2, cardY, cardW, cardH,
                 "3", "HARD", "Hell's Master",
                 new String[]{
-                        "• Demanding Customers (-30% wait)",
-                        "• Rapid Customer Spawns",
-                        "• Stoves catch fire in only 3s!",
+                        "• Strict Rush Speeds",
+                        "• Impatient Customers",
+                        "• Stoves catch fire in 3s!",
                         "• Frequent Demon orders",
-                        "• Unforgiving kitchen chaos",
-                        "• Extreme challenge for pros"
+                        "• Kitchen chaos challenge",
+                        "• For master chefs"
                 },
                 hint3,
                 new Color(198, 40, 40), new Color(239, 154, 154));
 
-        int escBoxW = 340;
-        int escBoxH = 38;
+        int escBoxW = 300;
+        int escBoxH = 28;
         int escBoxX = (width - escBoxW) / 2;
-        int escBoxY = 550;
+        int escBoxY = cardY + cardH + 12;
 
         g.setColor(new Color(30, 32, 45, 230));
-        g.fillRoundRect(escBoxX, escBoxY, escBoxW, escBoxH, 10, 10);
+        g.fillRoundRect(escBoxX, escBoxY, escBoxW, escBoxH, 8, 8);
         g.setColor(UiKit.BORDER_SUBTLE);
-        g.drawRoundRect(escBoxX, escBoxY, escBoxW, escBoxH, 10, 10);
+        g.drawRoundRect(escBoxX, escBoxY, escBoxW, escBoxH, 8, 8);
 
-        g.setFont(new Font("SansSerif", Font.PLAIN, 13));
+        g.setFont(new Font("SansSerif", Font.PLAIN, 12));
         g.setColor(UiKit.TEXT_LIGHT);
         Assets.drawCenteredText(g, "Press [ ESC ] to Return to Title Menu", width / 2, escBoxY + escBoxH / 2);
     }

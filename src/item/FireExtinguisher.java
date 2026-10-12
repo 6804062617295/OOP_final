@@ -17,27 +17,6 @@ public class FireExtinguisher implements Item {
         java.awt.image.BufferedImage img = Assets.get("extinguisher");
         if (img != null) {
             g.drawImage(img, x, y, size, size, null);
-            return;
         }
-
-        // Fallback graphics
-        int w = (int) (size * 0.55);
-        int h = (int) (size * 0.85);
-        int ox = x + (size - w) / 2;
-        int oy = y + (size - h) / 2 + 2;
-
-        g.setColor(new Color(210, 40, 40));
-        g.fillRoundRect(ox, oy, w, h, 8, 8);
-        g.setColor(new Color(150, 20, 20));
-        g.drawRoundRect(ox, oy, w, h, 8, 8);
-
-        g.setColor(new Color(245, 215, 60));
-        g.fillRect(ox + 1, oy + h / 3, w - 2, h / 5);
-
-        g.setColor(new Color(40, 40, 40));
-        g.fillRect(ox + w / 4, oy - 4, w / 2, 5);
-        g.fillRect(ox + w / 2 - 1, oy - 7, 3, 4);
-
-        g.drawArc(ox + w - 4, oy - 2, 8, 14, 0, 180);
     }
 }

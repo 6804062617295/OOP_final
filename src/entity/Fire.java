@@ -53,36 +53,21 @@ public class Fire extends GameObject {
 
     @Override
     public void draw(Graphics2D g) {
-        // Try drawing sprite if available
-        java.awt.image.BufferedImage img = Assets.get("fire");
+        int px = (int) x;
+        int py = (int) y;
+
+        // Danger tile background warning
+        g.setColor(new Color(180, 40, 20, 50));
+        g.fillRoundRect(px + 4, py + 4, width - 8, height - 8, 8, 8);
+
+        // Animated GIF sprite (fire.gif)
+        java.awt.image.BufferedImage img = Assets.getFrame("fire", animTime);
+        if (img == null) {
+            img = Assets.get("fire");
+        }
+
         if (img != null) {
-            g.drawImage(img, (int) x, (int) y, width, height, null);
-        } else {
-            // Animated flickering procedural fire
-            int px = (int) x;
-            int py = (int) y;
-
-            // Danger tile background
-            g.setColor(new Color(180, 40, 20, 60));
-            g.fillRoundRect(px + 4, py + 4, width - 8, height - 8, 8, 8);
-
-            // Outer red flame tongues
-            g.setColor(new Color(230, 40, 20, 220));
-            int wave1 = (int) (Math.sin(animTime) * 4);
-            int wave2 = (int) (Math.cos(animTime * 1.3) * 4);
-            g.fillOval(px + 10 + wave1, py + 16, width - 20, height - 22);
-
-            // Middle orange flame
-            g.setColor(new Color(255, 130, 20, 230));
-            g.fillOval(px + 16 - wave2, py + 22, width - 32, height - 30);
-
-            // Inner yellow core
-            g.setColor(new Color(255, 220, 50, 240));
-            g.fillOval(px + 22 + wave2 / 2, py + 28, width - 44, height - 38);
-
-            // White-hot center
-            g.setColor(new Color(255, 255, 200, 220));
-            g.fillOval(px + 26, py + 34, width - 52, height - 46);
+            g.drawImage(img, px, py, width, height, null);
         }
 
         // Extinguish health bar if taking damage

@@ -70,22 +70,6 @@ public class Ingredient implements Item {
 
     @Override
     public void draw(Graphics2D g, int x, int y, int size) {
-        Assets.draw(g, getSpriteName(), x, y, size, size, getPlaceholderColor(), getPlaceholderLabel());
-    }
-
-    private Color getPlaceholderColor() {
-        return switch (state) {
-            case RAW -> type.getColor();
-            case CHOPPED -> type.getColor().brighter();
-            case COOKED -> type.getColor().darker().darker();
-            case BURNT -> Color.DARK_GRAY;
-        };
-    }
-
-    private String getPlaceholderLabel() {
-        if (state == IngredientState.RAW) {
-            return type.getDisplayName().substring(0, 3);
-        }
-        return state.getTag();
+        Assets.draw(g, getSpriteName(), x, y, size, size, type.getColor(), null);
     }
 }
